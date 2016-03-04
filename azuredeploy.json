@@ -152,8 +152,8 @@
    "name": "[concat(variables('postfixName'),variables('socketPlanName'))]",
    "location": "[parameters('Location')]",
    "sku": {
-     "name": "F1",
-     "tier": "Free",
+     "name": "S1",
+     "tier": "Standard",
      "capacity": 1
    }
  }, {
@@ -162,8 +162,8 @@
   "name": "[concat(variables('postfixName'),variables('adminWebPlanName'))]",
   "location": "[parameters('Location')]",
   "sku": {
-    "name": "F1",
-    "tier": "Free",
+    "name": "S1",
+    "tier": "Standard",
     "capacity": 1
   }
 }, {
@@ -172,8 +172,8 @@
  "name": "[concat(variables('postfixName'),variables('fePlanName'))]",
  "location": "[parameters('Location')]",
  "sku": {
-   "name": "F1",
-   "tier": "Free",
+   "name": "S1",
+   "tier": "Standard",
    "capacity": 1
  }
 }, {
