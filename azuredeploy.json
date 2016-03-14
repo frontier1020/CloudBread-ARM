@@ -39,26 +39,16 @@
     "sqlServerName": "-cb-sqlsvr-dev",
     "sqlDBName": "-cb-sqldb-dev",
     "storAccName": "cbstrdev",
-    "fePlanName": "-cb-fe-asp-dev",
     "socketPlanName": "-cb-socket-asp-dev",
-    "adminWebPlanName": "-cb-adminweb-asp-dev",
-    "mobileAppName": "-cb-fe-ma-dev",
     "socketAppName": "-cb-socket-wa-dev",
-    "adminWebAppName": "-cb-adminweb-wa-dev",
     "notificationHubName": "-cb-push-nh-dev",
     "notiNamespace": "cbpushnndev",
 
     "url": ".azurewebsites.net",
     "urlScm": ".scm.azurewebsites.net",
-    "mobileName": "[concat(variables('postfixName'),variables('mobileAppName'))]",
     "socketName": "[concat(variables('postfixName'),variables('socketAppName'))]",
-    "adminWebName": "[concat(variables('postfixName'),variables('adminWebAppName'))]",
-    "mobileSiteName": "[concat(variables('mobileName'),variables('url'))]",
-    "mobileScmSiteName": "[concat(variables('mobileName'),variables('urlScm'))]",
     "socketSiteName": "[concat(variables('socketName'),variables('url'))]",
-    "socketScmSiteName": "[concat(variables('socketName'),variables('urlScm'))]",
-    "adminWebSiteName": "[concat(variables('adminWebName'),variables('url'))]",
-    "adminWebScmSiteName": "[concat(variables('adminWebName'),variables('urlScm'))]"
+    "socketScmSiteName": "[concat(variables('socketName'),variables('urlScm'))]"
   },
   "resources": [{
     "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Cache/Redis/jhredis",
@@ -163,69 +153,6 @@
       "numberOfWorkers": 0
     }
   }, {
-    "type": "Microsoft.Web/serverFarms",
-    "sku": {
-      "name": "F1",
-      "tier": "Free",
-      "size": "F1",
-      "family": "F",
-      "capacity": 0
-    },
-    "name": "[concat(variables('postfixName'),variables('adminWebPlanName'))]",
-    "apiVersion": "2015-08-01",
-    "location": "Japan West",
-    "properties": {
-      "name": "[concat(variables('postfixName'),variables('adminWebPlanName'))]",
-      "numberOfWorkers": 0
-    }
-  }, {
-    "type": "Microsoft.Web/serverFarms",
-    "sku": {
-      "name": "F1",
-      "tier": "Free",
-      "size": "F1",
-      "family": "F",
-      "capacity": 0
-    },
-    "name": "[concat(variables('postfixName'),variables('fePlanName'))]",
-    "apiVersion": "2015-08-01",
-    "location": "Japan West",
-    "properties": {
-      "name": "[concat(variables('postfixName'),variables('fePlanName'))]",
-      "numberOfWorkers": 0
-    }
-  }, {
-    "type": "Microsoft.Web/sites",
-    "kind": "mobileapp",
-    "name": "[variables('mobileName')]",
-    "apiVersion": "2015-08-01-preview",
-    "location": "[parameters('Location')]",
-    "properties": {
-      "name": "[variables('mobileName')]",
-      "hostNames": [
-        "[variables('mobileSiteName')]"
-      ],
-      "enabledHostNames": [
-        "[variables('mobileSiteName')]",
-        "[variables('mobileScmSiteName')]"
-      ],
-      "hostNameSslStates": [{
-        "name": "[variables('mobileSiteName')]",
-        "sslState": 0,
-        "thumbprint": null,
-        "ipBasedSslState": 0
-      }, {
-        "name": "[variables('mobileScmSiteName')]",
-        "sslState": 0,
-        "thumbprint": null,
-        "ipBasedSslState": 0
-      }],
-      "serverFarmId": "[resourceId('Microsoft.Web/serverFarms', concat(variables('postfixName'),variables('fePlanName')))]"
-    },
-    "dependsOn": [
-      "[resourceId('Microsoft.Web/serverFarms', concat(variables('postfixName'),variables('fePlanName')))]"
-    ]
-  }, {
     "type": "Microsoft.Web/sites",
     "name": "[variables('socketName')]",
     "apiVersion": "2015-08-01-preview",
@@ -254,36 +181,6 @@
     },
     "dependsOn": [
       "[resourceId('Microsoft.Web/serverFarms', concat(variables('postfixName'),variables('socketPlanName')))]"
-    ]
-  }, {
-    "type": "Microsoft.Web/sites",
-    "name": "[variables('adminWebName')]",
-    "apiVersion": "2015-08-01-preview",
-    "location": "[parameters('Location')]",
-    "properties": {
-      "name": "[variables('adminWebName')]",
-      "hostNames": [
-        "[variables('adminWebSiteName')]"
-      ],
-      "enabledHostNames": [
-        "[variables('adminWebSiteName')]",
-        "[variables('adminWebScmSiteName')]"
-      ],
-      "hostNameSslStates": [{
-        "name": "[variables('adminWebSiteName')]",
-        "sslState": 0,
-        "thumbprint": null,
-        "ipBasedSslState": 0
-      }, {
-        "name": "[variables('adminWebScmSiteName')]",
-        "sslState": 0,
-        "thumbprint": null,
-        "ipBasedSslState": 0
-      }],
-      "serverFarmId": "[resourceId('Microsoft.Web/serverFarms', concat(variables('postfixName'),variables('adminWebPlanName')))]"
-    },
-    "dependsOn": [
-      "[resourceId('Microsoft.Web/serverFarms', concat(variables('postfixName'),variables('adminWebPlanName')))]"
     ]
   }]
 }
