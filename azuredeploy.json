@@ -18,145 +18,20 @@
         "East Asia",
         "Southeast Asia"
       ]
-    },
-    "SQL server Login ID": {
-      "type": "string",
-      "metadata": {
-        "description": "Do not use the 'admin' for ID."
-      }
-    },
-    "SQL server Login password": {
-      "type": "securestring",
-      "minLength": 8,
-      "metadata": {
-        "description": "Contain special characters. length: 8~"
-      }
     }
   },
   "variables": {
     "postfixName": "[parameters('postfixAppName')]",
-    "redisName": "-cb-redis-dev",
-    "sqlServerName": "-cb-sqlsvr-dev",
-    "sqlDBName": "-cb-sqldb-dev",
-    "storAccName": "cbstrdev",
-    "fePlanName": "-cb-fe-asp-dev",
-    "socketPlanName": "-cb-socket-asp-dev",
     "adminWebPlanName": "-cb-adminweb-asp-dev",
-    "mobileAppName": "-cb-fe-ma-dev",
-    "socketAppName": "-cb-socket-wa-dev",
     "adminWebAppName": "-cb-adminweb-wa-dev",
-    "notificationHubName": "-cb-push-nh-dev",
-    "notiNamespace": "cbpushnndev",
 
     "url": ".azurewebsites.net",
     "urlScm": ".scm.azurewebsites.net",
-    "mobileName": "[concat(variables('postfixName'),variables('mobileAppName'))]",
-    "socketName": "[concat(variables('postfixName'),variables('socketAppName'))]",
     "adminWebName": "[concat(variables('postfixName'),variables('adminWebAppName'))]",
-    "mobileSiteName": "[concat(variables('mobileName'),variables('url'))]",
-    "mobileScmSiteName": "[concat(variables('mobileName'),variables('urlScm'))]",
-    "socketSiteName": "[concat(variables('socketName'),variables('url'))]",
-    "socketScmSiteName": "[concat(variables('socketName'),variables('urlScm'))]",
     "adminWebSiteName": "[concat(variables('adminWebName'),variables('url'))]",
     "adminWebScmSiteName": "[concat(variables('adminWebName'),variables('urlScm'))]"
   },
   "resources": [{
-    "comments": "Generalized from resource: /subscriptions/3e6494d9-d19d-41c6-bfa6-44870aecc57b/resourceGroups/jh-rg-cloudbread/providers/Microsoft.Cache/Redis/jhredis",
-    "type": "Microsoft.Cache/Redis",
-    "name": "[concat(variables('postfixName'),variables('redisName'))]",
-    "apiVersion": "2015-08-01",
-    "location": "[parameters('Location')]",
-    "properties": {
-      "sku": {
-        "name": "Standard",
-        "family": "C",
-        "capacity": 1
-      },
-      "enableNonSslPort": false,
-      "redisConfiguration": {
-        "maxclients": "1000",
-        "maxmemory-reserved": "50",
-        "maxmemory-delta": "50"
-      }
-    }
-  }, {
-    "type": "Microsoft.NotificationHubs/namespaces",
-    "name": "[concat(variables('postfixName'),variables('notiNamespace'))]",
-    "apiVersion": "2014-09-01",
-    "location": "[parameters('Location')]",
-    "properties": {
-      "namespaceType": "NotificationHub"
-    },
-    "resources": [{
-      "type": "notificationHubs",
-      "name": "[concat(variables('postfixName'),variables('notificationHubName'))]",
-      "apiVersion": "2014-09-01",
-      "location": "[parameters('Location')]",
-      "properties": {
-        "authorizationRules": []
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.NotificationHubs/namespaces', concat(variables('postfixName'),variables('notiNamespace')))]"
-      ]
-    }]
-  }, {
-    "type": "Microsoft.Sql/servers",
-    "kind": "v12.0",
-    "name": "[concat(variables('postfixName'),variables('sqlServerName'))]",
-    "apiVersion": "2014-04-01-preview",
-    "location": "[parameters('Location')]",
-    "properties": {
-      "administratorLogin": "[parameters('SQL server Login ID')]",
-      "administratorLoginPassword": "[parameters('SQL server Login password')]",
-      "version": "12.0"
-    },
-    "resources": [{
-      "name": "[concat(variables('postfixName'),variables('sqlDBName'))]",
-      "type": "databases",
-      "location": "[parameters('Location')]",
-      "apiVersion": "2014-04-01-preview",
-      "dependsOn": [
-        "[concat('Microsoft.Sql/servers/', concat(variables('postfixName'),variables('sqlServerName')))]"
-      ],
-      "properties": {
-        "edition": "Basic",
-        "collation": "SQL_Latin1_General_CP1_CI_AS",
-        "maxSizeBytes": "2147483648",
-        "requestedServiceObjectiveName": null,
-        "containmentState": 2
-      }
-    }, {
-      "apiVersion": "2014-04-01-preview",
-      "dependsOn": [
-        "[concat('Microsoft.Sql/servers/', concat(variables('postfixName'),variables('sqlServerName')))]"
-      ],
-      "location": "[parameters('Location')]",
-      "name": "AllowAllWindowsAzureIps",
-      "properties": {
-        "endIpAddress": "0.0.0.0",
-        "startIpAddress": "0.0.0.0"
-      },
-      "type": "firewallrules"
-    }]
-  }, {
-    "type": "Microsoft.Storage/storageAccounts",
-    "name": "[concat(variables('postfixName'),variables('storAccName'))]",
-    "apiVersion": "2015-06-15",
-    "location": "[parameters('Location')]",
-    "properties": {
-      "accountType": "Standard_LRS"
-    }
-  }, {
-   "type": "Microsoft.Web/serverfarms",
-   "apiVersion": "2015-08-01",
-   "name": "[concat(variables('postfixName'),variables('socketPlanName'))]",
-   "location": "[parameters('Location')]",
-   "sku": {
-     "name": "F1",
-     "tier": "Free",
-     "capacity": 1
-   }
- }, {
   "type": "Microsoft.Web/serverfarms",
   "apiVersion": "2015-08-01",
   "name": "[concat(variables('postfixName'),variables('adminWebPlanName'))]",
@@ -167,77 +42,6 @@
     "capacity": 1
   }
 }, {
- "type": "Microsoft.Web/serverfarms",
- "apiVersion": "2015-08-01",
- "name": "[concat(variables('postfixName'),variables('fePlanName'))]",
- "location": "[parameters('Location')]",
- "sku": {
-   "name": "F1",
-   "tier": "Free",
-   "capacity": 1
- }
-}, {
-    "type": "Microsoft.Web/sites",
-    "kind": "mobileapp",
-    "name": "[variables('mobileName')]",
-    "apiVersion": "2015-08-01-preview",
-    "location": "[parameters('Location')]",
-    "properties": {
-      "name": "[variables('mobileName')]",
-      "hostNames": [
-        "[variables('mobileSiteName')]"
-      ],
-      "enabledHostNames": [
-        "[variables('mobileSiteName')]",
-        "[variables('mobileScmSiteName')]"
-      ],
-      "hostNameSslStates": [{
-        "name": "[variables('mobileSiteName')]",
-        "sslState": 0,
-        "thumbprint": null,
-        "ipBasedSslState": 0
-      }, {
-        "name": "[variables('mobileScmSiteName')]",
-        "sslState": 0,
-        "thumbprint": null,
-        "ipBasedSslState": 0
-      }],
-      "serverFarmId": "[resourceId('Microsoft.Web/serverFarms', concat(variables('postfixName'),variables('fePlanName')))]"
-    },
-    "dependsOn": [
-      "[resourceId('Microsoft.Web/serverFarms', concat(variables('postfixName'),variables('fePlanName')))]"
-    ]
-  }, {
-    "type": "Microsoft.Web/sites",
-    "name": "[variables('socketName')]",
-    "apiVersion": "2015-08-01-preview",
-    "location": "[parameters('Location')]",
-    "properties": {
-      "name": "[variables('socketName')]",
-      "hostNames": [
-        "[variables('socketSiteName')]"
-      ],
-      "enabledHostNames": [
-        "[variables('socketSiteName')]",
-        "[variables('socketScmSiteName')]"
-      ],
-      "hostNameSslStates": [{
-        "name": "[variables('socketSiteName')]",
-        "sslState": 0,
-        "thumbprint": null,
-        "ipBasedSslState": 0
-      }, {
-        "name": "[variables('socketScmSiteName')]",
-        "sslState": 0,
-        "thumbprint": null,
-        "ipBasedSslState": 0
-      }],
-      "serverFarmId": "[resourceId('Microsoft.Web/serverFarms', concat(variables('postfixName'),variables('socketPlanName')))]"
-    },
-    "dependsOn": [
-      "[resourceId('Microsoft.Web/serverFarms', concat(variables('postfixName'),variables('socketPlanName')))]"
-    ]
-  }, {
     "type": "Microsoft.Web/sites",
     "name": "[variables('adminWebName')]",
     "apiVersion": "2015-08-01-preview",
